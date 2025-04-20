@@ -3,7 +3,4 @@
 
 ## Setup
 
-Uses python 3.11.8
-1. `python -m venv env`
-1. `source env/bin/activate`
-1. `pip install -r requirements.txt`
+See [API setup](api/API.md)
