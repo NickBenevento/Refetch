@@ -1,4 +1,6 @@
 beautifulsoup4==4.12.3
+psycopg2-binary==2.9.10
+# psycopg2==2.9.10
 pydantic==2.11.3
 fastapi[standard]==0.115.12
 sqlalchemy==2.0.40
