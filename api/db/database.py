@@ -1,10 +1,14 @@
 import os
+import ssl
 from typing import Annotated
 
 from dotenv import load_dotenv
 from fastapi import Depends
+from pydantic import ValidationError
 from sqlalchemy import URL
 from sqlmodel import Session, SQLModel, create_engine
+
+from api.models.pydantic.product import Product
 
 load_dotenv()
 
@@ -16,22 +20,23 @@ PASSWORD = os.getenv("DB_PASSWORD", "")
 PORT = os.getenv("DB_PORT", "")
 
 DATABASE_URL = URL.create(
-    drivername="postgresql",
+    drivername="postgresql+pg8000",
     host=DB_HOST,
     username=USERNAME,
     password=PASSWORD,
     port=PORT,
     database=DB_NAME,
 )
-print("db url: ", DATABASE_URL.render_as_string(hide_password=False))
 
+pem_path = os.path.abspath("api/certs/us-east-1-bundle.pem")
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.load_verify_locations(pem_path)
 # allow FastAPI to use the same database in different threads
 # Necessary b/c one single request could use multiple threads
-connect_args = {"check_same_thread": False}
-engine = create_engine(DATABASE_URL)
-# engine = create_engine(
-#     "postgresql://postgres:tango9ij(IJ@refetch.cr04sckw0441.us-east-1.rds.amazonaws.com:5432/postgres"
-# )
+db_args = {"check_same_thread": False, "sslmode": "require", "ssl_context": ssl_context}
+
+engine = create_engine(DATABASE_URL, connect_args={"ssl_context": ssl_context})
 
 
 def create_db_and_tables():
