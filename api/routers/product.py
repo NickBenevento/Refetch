@@ -1,6 +1,7 @@
 from uuid import UUID
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, HTTPException, status
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from api.db.database import SessionDep
 from api.models.db.product import Product
@@ -11,22 +12,32 @@ router = APIRouter(prefix="/products", tags=["products"])
 
 # Create
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_products(product: Product, session: SessionDep) -> Product:
-    print("incoming product: ", product)
-    session.add(product)
-    session.commit()
-    session.refresh(product)
+async def create_product(product: Product, session: SessionDep) -> Product:
+    try:
+        session.add(product)
+        session.commit()
+        session.refresh(product)
+    except IntegrityError as e:
+        raise HTTPException(
+            status_code=500, detail="An integrity error occurred: {e}"
+        ) from e
+    except SQLAlchemyError as e:
+        print("SQLAlchemy error: %s", e)
+        raise HTTPException(
+            status_code=500, detail="SQLAlchemy error occurred: {e}"
+        ) from e
     return product
 
 
 # Read
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_products():
+
     return {"products": "all products"}
 
 
 @router.get("/{item_id}", status_code=status.HTTP_200_OK)
-async def get_products(item_id: UUID):
+async def get_product_by_id(item_id: UUID):
     # get product by id from db
     # if not item_id
     #
@@ -42,7 +53,7 @@ async def update_product(update_product: UpdateProduct):
 
 # Update
 @router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_product(id: UUID):
+async def delete_product(item_id: UUID):
     # TODO: update database
     # get product by id from db
     # if not item_id

@@ -4,11 +4,8 @@ from typing import Annotated
 
 from dotenv import load_dotenv
 from fastapi import Depends
-from pydantic import ValidationError
 from sqlalchemy import URL
 from sqlmodel import Session, SQLModel, create_engine
-
-from api.models.pydantic.product import Product
 
 load_dotenv()
 
@@ -34,7 +31,12 @@ ssl_context.check_hostname = False
 ssl_context.load_verify_locations(pem_path)
 # allow FastAPI to use the same database in different threads
 # Necessary b/c one single request could use multiple threads
-db_args = {"check_same_thread": False, "sslmode": "require", "ssl_context": ssl_context}
+db_args = {
+    "timeout": 1000,
+    "check_same_thread": False,
+    "sslmode": "require",
+    "ssl_context": ssl_context,
+}
 
 engine = create_engine(DATABASE_URL, connect_args={"ssl_context": ssl_context})
 
