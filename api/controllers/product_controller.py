@@ -21,7 +21,7 @@ async def create_product(product: ProductBase, session: SessionDep) -> ProductPu
 
 async def get_products(session: SessionDep) -> list[ProductPublic]:
     try:
-        products = session.exec(select(Product)).all()
+        products = session.exec(select(Product)).scalars().all()
         return products
     except IntegrityError as e:
         raise HTTPException(
