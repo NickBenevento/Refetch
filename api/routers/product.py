@@ -1,43 +1,39 @@
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from pydantic import ValidationError
 
+from api.controllers import product_controller
 from api.db.database import SessionDep
-from api.models.db.product import Product
-from api.models.pydantic.product import UpdateProduct
+from api.models.product import Product, ProductBase, ProductPublic, ProductUpdate
 
 router = APIRouter(prefix="/products", tags=["products"])
 
 
 # Create
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_product(product: Product, session: SessionDep) -> Product:
+async def create_product(product: ProductBase, session: SessionDep) -> ProductPublic:
+    """Add the product to the database."""
     try:
-        session.add(product)
-        session.commit()
-        session.refresh(product)
-    except IntegrityError as e:
+        validated_product = Product.model_validate(product)
+        return await product_controller.create_product(validated_product, session)
+    except ValidationError as e:
         raise HTTPException(
-            status_code=500, detail="An integrity error occurred: {e}"
+            status_code=422,
+            detail=f"Could not process the input product: {product}, {e}",
         ) from e
-    except SQLAlchemyError as e:
-        print("SQLAlchemy error: %s", e)
-        raise HTTPException(
-            status_code=500, detail="SQLAlchemy error occurred: {e}"
-        ) from e
-    return product
 
 
 # Read
-@router.get("/", status_code=status.HTTP_200_OK)
-async def get_products():
-
-    return {"products": "all products"}
+@router.get("/", status_code=status.HTTP_200_OK, response_model=list[ProductPublic])
+async def get_products(session: SessionDep) -> list[ProductPublic]:
+    """Return all products in the database."""
+    return await product_controller.get_products(session)
 
 
 @router.get("/{item_id}", status_code=status.HTTP_200_OK)
-async def get_product_by_id(item_id: UUID):
+async def get_product_by_id(item_id: UUID) -> Product:
+    """Get a product by id, if it is present - otherwise error."""
     # get product by id from db
     # if not item_id
     #
@@ -46,7 +42,8 @@ async def get_product_by_id(item_id: UUID):
 
 # Update
 @router.put("/", status_code=status.HTTP_200_OK)
-async def update_product(update_product: UpdateProduct):
+async def update_product(product_update: ProductUpdate) -> Product:
+    """Update a product based on the given fields."""
     # TODO: update database
     return {}
 
@@ -54,6 +51,7 @@ async def update_product(update_product: UpdateProduct):
 # Update
 @router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_product(item_id: UUID):
+    """Delete a product based on id."""
     # TODO: update database
     # get product by id from db
     # if not item_id
