@@ -38,7 +38,9 @@ async def get_product_by_id(product_id: UUID, session: SessionDep) -> ProductPub
 
 
 # Update
-@router.put("/{product_id}", status_code=status.HTTP_200_OK, response_model=ProductPublic)
+@router.put(
+    "/{product_id}", status_code=status.HTTP_200_OK, response_model=ProductPublic
+)
 async def update_product(
     product_id: UUID, product_update: ProductUpdate, session: SessionDep
 ) -> ProductPublic:
