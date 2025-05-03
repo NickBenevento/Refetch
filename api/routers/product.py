@@ -7,7 +7,7 @@ from api.controllers import product_controller
 from api.db.database import SessionDep
 from api.models.product import Product, ProductBase, ProductPublic, ProductUpdate
 
-router = APIRouter(prefix="/products", tags=["products"])
+router = APIRouter(prefix="/product", tags=["products"])
 
 
 # Create
@@ -31,13 +31,10 @@ async def get_products(session: SessionDep) -> list[ProductPublic]:
     return await product_controller.get_products(session)
 
 
-@router.get("/{item_id}", status_code=status.HTTP_200_OK)
-async def get_product_by_id(item_id: UUID) -> Product:
+@router.get("/{product_id}", status_code=status.HTTP_200_OK)
+async def get_product_by_id(product_id: UUID, session: SessionDep) -> Product:
     """Get a product by id, if it is present - otherwise error."""
-    # get product by id from db
-    # if not item_id
-    #
-    return {"products": "all products"}
+    return await product_controller.get_product_by_id(product_id, session)
 
 
 # Update

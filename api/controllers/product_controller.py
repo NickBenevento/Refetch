@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import HTTPException
 from fastapi.exceptions import ResponseValidationError
 from sqlalchemy import select
@@ -31,4 +33,23 @@ async def get_products(session: SessionDep) -> list[ProductPublic]:
         raise HTTPException(
             status_code=422,
             detail=f"Could not process the output: {products}, {e}",
+        ) from e
+
+
+async def get_product_by_id(product_id: UUID, session: SessionDep) -> ProductPublic:
+    try:
+        product = (
+            session.exec(select(Product).where(Product.id == product_id))
+            .scalars()
+            .first()
+        )
+        if not product:
+            raise HTTPException(
+                status_code=404, detail="Product with id {product_id} not found"
+            )
+        return product
+    except ResponseValidationError as e:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Could not process the output: {product}, {e}",
         ) from e
