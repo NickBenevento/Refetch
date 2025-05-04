@@ -12,4 +12,4 @@ clean:
 	rm -rf __pycache__ *.pyc
 
 test:
-	python -m pytest
+	PYTHONPATH=. pytest api/tests

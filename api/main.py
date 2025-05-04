@@ -13,18 +13,13 @@ app = FastAPI()
 app.include_router(product.router)
 
 
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Set up the database
+    # TODO: run alembic migrations
     create_db_and_tables()
-
-
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     # Set up the database
-#     # TODO: run alembic migrations
-#     create_db_and_tables()
-#     yield
-#     # Put shutdown logic / cleanup here
+    yield
+    # Put shutdown logic / cleanup here
 
 
 # @app.exception_handler(SQLAlchemyError)
