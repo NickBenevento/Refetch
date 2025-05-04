@@ -32,17 +32,18 @@ async def get_products(session: SessionDep) -> list[ProductPublic]:
 
 
 @router.get("/{product_id}", status_code=status.HTTP_200_OK)
-async def get_product_by_id(product_id: UUID, session: SessionDep) -> Product:
+async def get_product_by_id(product_id: UUID, session: SessionDep) -> ProductPublic:
     """Get a product by id, if it is present - otherwise error."""
     return await product_controller.get_product_by_id(product_id, session)
 
 
 # Update
-@router.put("/", status_code=status.HTTP_200_OK)
-async def update_product(product_update: ProductUpdate) -> Product:
+@router.put("/{product_id}", status_code=status.HTTP_200_OK)
+async def update_product(
+    product_id: UUID, product_update: ProductUpdate, session: SessionDep
+) -> ProductPublic:
     """Update a product based on the given fields."""
-    # TODO: update database
-    return {}
+    return await product_controller.update_product(product_id, product_update, session)
 
 
 # Update

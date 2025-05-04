@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from api.db.database import SessionDep
-from api.models.product import Product, ProductBase, ProductPublic
+from api.models.product import Product, ProductBase, ProductPublic, ProductUpdate
 
 
 async def create_product(product: ProductBase, session: SessionDep) -> ProductPublic:
@@ -53,3 +53,19 @@ async def get_product_by_id(product_id: UUID, session: SessionDep) -> ProductPub
             status_code=422,
             detail=f"Could not process the output: {product}, {e}",
         ) from e
+
+
+async def update_product(
+    product_id: UUID, product_update: ProductUpdate, session: SessionDep
+) -> ProductPublic:
+    product: ProductPublic = await get_product_by_id(
+        product_id=product_id, session=session
+    )
+    if product_update.name:
+        product.name = product_update.name
+    if product_update.url:
+        product.url = product_update.url
+
+    session.add(product)
+    session.commit()
+    return product
