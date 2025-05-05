@@ -47,10 +47,7 @@ async def update_product(
 
 
 # Update
-@router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_product(item_id: UUID):
+@router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_product(product_id: UUID, session: SessionDep) -> None:
     """Delete a product based on id."""
-    # TODO: update database
-    # get product by id from db
-    # if not item_id
-    return {}
+    await product_controller.delete_product(product_id, session)
