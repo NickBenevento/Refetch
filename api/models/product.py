@@ -30,6 +30,8 @@ class ProductBase(SQLModel):
         from_attributes=True,
     )
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class Product(ProductBase, table=True):
     id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
