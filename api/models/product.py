@@ -1,23 +1,20 @@
 import uuid
 from typing import Annotated
 
-from pydantic import AfterValidator, AnyUrl
-from sqlmodel import Field, SQLModel
-
-
-def validate_email(url: str) -> str:
-    _: AnyUrl = AnyUrl(url)
-    return url
+from pydantic import AnyUrl, ConfigDict
+from sqlmodel import AutoString, Field, SQLModel
 
 
 class ProductBase(SQLModel):
-    url: str = Field(
-        AfterValidator(validate_email),
-        title="The url to the desired product page",
-        index=True,
-    )
+    url: Annotated[
+        AnyUrl,
+        Field(index=True, sa_type=AutoString),
+        "The new url to the desired product page",
+    ]
 
     name: str = Field("The name of the product", index=True)
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Product(ProductBase, table=True):

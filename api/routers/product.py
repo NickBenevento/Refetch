@@ -5,14 +5,14 @@ from pydantic import ValidationError
 
 from api.controllers import product_controller
 from api.db.database import SessionDep
-from api.models.product import Product, ProductBase, ProductPublic, ProductUpdate
+from api.models.product import Product, ProductCreate, ProductPublic, ProductUpdate
 
 router = APIRouter(prefix="/product", tags=["products"])
 
 
 # Create
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_product(product: ProductBase, session: SessionDep) -> ProductPublic:
+async def create_product(product: ProductCreate, session: SessionDep) -> ProductPublic:
     """Add the product to the database."""
     try:
         validated_product = Product.model_validate(product)

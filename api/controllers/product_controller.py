@@ -36,16 +36,12 @@ async def get_products(session: SessionDep) -> list[ProductPublic]:
         ) from e
 
 
-async def get_product_by_id(product_id: UUID, session: SessionDep) -> ProductPublic:
+async def get_product_by_id(product_id: UUID, session: SessionDep) -> Product:
     try:
-        product = (
-            session.exec(select(Product).where(Product.id == product_id))
-            .scalars()
-            .first()
-        )
+        product = session.get(Product, product_id)
         if not product:
             raise HTTPException(
-                status_code=404, detail="Product with id {product_id} not found"
+                status_code=404, detail=f"Product with id {product_id} not found"
             )
         return product
     except ResponseValidationError as e:
@@ -72,16 +68,6 @@ async def update_product(
 
 
 async def delete_product(product_id: UUID, session: SessionDep) -> None:
-    try:
-        product = session.query(Product).filter(Product.id == product_id)
-        if not product:
-            raise HTTPException(
-                status_code=404, detail="Product with id {product_id} not found"
-            )
-        product.delete()
-        session.commit()
-    except ResponseValidationError as e:
-        raise HTTPException(
-            status_code=422,
-            detail=f"Could not process the output: {product}, {e}",
-        ) from e
+    product = await get_product_by_id(product_id, session)
+    session.delete(product)
+    session.commit()
