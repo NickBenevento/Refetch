@@ -7,6 +7,9 @@ from fastapi import Depends
 from sqlalchemy import URL
 from sqlmodel import Session, SQLModel, create_engine
 
+# Necessary so SQLModel can create the tables
+from api import models  # pylint: disable=unused-import
+
 load_dotenv()
 
 
@@ -32,13 +35,11 @@ ssl_context.load_verify_locations(pem_path)
 # allow FastAPI to use the same database in different threads
 # Necessary b/c one single request could use multiple threads
 db_args = {
-    "timeout": 1000,
-    "check_same_thread": False,
-    "sslmode": "require",
+    "timeout": 5,
     "ssl_context": ssl_context,
 }
 
-engine = create_engine(DATABASE_URL, connect_args={"ssl_context": ssl_context})
+engine = create_engine(DATABASE_URL, connect_args=db_args)
 
 
 def create_db_and_tables():

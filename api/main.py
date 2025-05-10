@@ -1,8 +1,6 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
-from sqlalchemy.exc import SQLAlchemyError
+from fastapi import FastAPI
 
 from .db.database import create_db_and_tables
 from .routers import product
@@ -34,4 +32,4 @@ async def lifespan(app: FastAPI):
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Refetch"}
