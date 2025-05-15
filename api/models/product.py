@@ -1,7 +1,7 @@
 import uuid
 from typing import Annotated
 
-from pydantic import BeforeValidator, ConfigDict, Field, HttpUrl, TypeAdapter
+from pydantic import BeforeValidator, ConfigDict, HttpUrl, TypeAdapter
 from sqlmodel import Field, SQLModel
 
 http_url_adapter = TypeAdapter(HttpUrl)
@@ -29,8 +29,6 @@ class ProductBase(SQLModel):
     model_config = ConfigDict(
         from_attributes=True,
     )
-
-    model_config = ConfigDict(from_attributes=True)
 
 
 class Product(ProductBase, table=True):
