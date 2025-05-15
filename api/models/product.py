@@ -8,6 +8,8 @@ http_url_adapter = TypeAdapter(HttpUrl)
 
 
 class ProductBase(SQLModel):
+    # Need to save as a string (for DB purposed), but still want URL validation
+    # Approach for this taken from here: https://github.com/pydantic/pydantic/discussions/6395
     url: Annotated[
         str,
         BeforeValidator(lambda value: str(http_url_adapter.validate_python(value))),
