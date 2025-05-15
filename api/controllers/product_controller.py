@@ -9,7 +9,7 @@ from api.db.database import SessionDep
 from api.models.product import Product, ProductBase, ProductPublic, ProductUpdate
 
 
-async def create_product(product: ProductBase, session: SessionDep) -> ProductPublic:
+async def create_product(product: Product, session: SessionDep) -> ProductPublic:
     try:
         session.add(product)
         session.commit()

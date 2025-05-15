@@ -14,8 +14,6 @@ from sqlmodel.pool import StaticPool
 from api.db.database import get_session
 from api.main import app
 
-#
-
 
 @pytest.fixture(name="session")
 def session_fixture():

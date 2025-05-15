@@ -11,7 +11,7 @@ router = APIRouter(prefix="/product", tags=["products"])
 
 
 # Create
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=ProductPublic)
 async def create_product(product: ProductCreate, session: SessionDep) -> ProductPublic:
     """Add the product to the database."""
     try:

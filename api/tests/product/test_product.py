@@ -29,12 +29,10 @@ def test_create_product_invalid_name(client):
 
 
 def test_get_product_by_id(session, client, example_product):
-    # TODO
-    product = Product.model_validate(example_product)
-    session.add(product)
-    session.commit()
+    result = client.post("/product/", json=example_product)
+    product_id = result.json()["id"]
 
-    response = client.get(f"/product/{product.id}")
+    response = client.get(f"/product/{product_id}")
     assert response.status_code == 200
     assert response.json()["url"] == example_product["url"]
     assert response.json()["name"] == example_product["name"]
@@ -53,3 +51,7 @@ def test_update_product_invalid_name(client):
     product = {"url": "google", "name": ""}
     response = client.post("/product/", json=product)
     assert response.status_code == 422
+
+
+def test_update_product_by_id(session, client, example_product):
+    pass
