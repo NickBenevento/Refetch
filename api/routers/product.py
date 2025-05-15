@@ -5,14 +5,14 @@ from pydantic import ValidationError
 
 from api.controllers import product_controller
 from api.db.database import SessionDep
-from api.models.product import Product, ProductBase, ProductPublic, ProductUpdate
+from api.models.product import Product, ProductCreate, ProductPublic, ProductUpdate
 
-router = APIRouter(prefix="/products", tags=["products"])
+router = APIRouter(prefix="/product", tags=["products"])
 
 
 # Create
-@router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_product(product: ProductBase, session: SessionDep) -> ProductPublic:
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=ProductPublic)
+async def create_product(product: ProductCreate, session: SessionDep) -> ProductPublic:
     """Add the product to the database."""
     try:
         validated_product = Product.model_validate(product)
@@ -31,28 +31,23 @@ async def get_products(session: SessionDep) -> list[ProductPublic]:
     return await product_controller.get_products(session)
 
 
-@router.get("/{item_id}", status_code=status.HTTP_200_OK)
-async def get_product_by_id(item_id: UUID) -> Product:
+@router.get("/{product_id}", status_code=status.HTTP_200_OK)
+async def get_product_by_id(product_id: UUID, session: SessionDep) -> ProductPublic:
     """Get a product by id, if it is present - otherwise error."""
-    # get product by id from db
-    # if not item_id
-    #
-    return {"products": "all products"}
+    return await product_controller.get_product_by_id(product_id, session)
 
 
 # Update
-@router.put("/", status_code=status.HTTP_200_OK)
-async def update_product(product_update: ProductUpdate) -> Product:
+@router.put("/{product_id}", status_code=status.HTTP_200_OK, response_model=ProductPublic)
+async def update_product(
+    product_id: UUID, product_update: ProductUpdate, session: SessionDep
+) -> ProductPublic:
     """Update a product based on the given fields."""
-    # TODO: update database
-    return {}
+    return await product_controller.update_product(product_id, product_update, session)
 
 
 # Update
-@router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_product(item_id: UUID):
+@router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_product(product_id: UUID, session: SessionDep) -> None:
     """Delete a product based on id."""
-    # TODO: update database
-    # get product by id from db
-    # if not item_id
-    return {}
+    await product_controller.delete_product(product_id, session)

@@ -1,8 +1,6 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
-from sqlalchemy.exc import SQLAlchemyError
+from fastapi import FastAPI
 
 from .db.database import create_db_and_tables
 from .routers import product
@@ -13,18 +11,13 @@ app = FastAPI()
 app.include_router(product.router)
 
 
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Set up the database
+    # TODO: run alembic migrations
     create_db_and_tables()
-
-
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     # Set up the database
-#     # TODO: run alembic migrations
-#     create_db_and_tables()
-#     yield
-#     # Put shutdown logic / cleanup here
+    yield
+    # Put shutdown logic / cleanup here
 
 
 # @app.exception_handler(SQLAlchemyError)
@@ -39,4 +32,4 @@ async def startup_event():
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Refetch"}

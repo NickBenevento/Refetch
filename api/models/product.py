@@ -1,23 +1,34 @@
 import uuid
 from typing import Annotated
 
-from pydantic import AfterValidator, AnyUrl
+from pydantic import BeforeValidator, ConfigDict, Field, HttpUrl, TypeAdapter
 from sqlmodel import Field, SQLModel
 
-
-def validate_email(url: str) -> str:
-    _: AnyUrl = AnyUrl(url)
-    return url
+http_url_adapter = TypeAdapter(HttpUrl)
 
 
 class ProductBase(SQLModel):
-    url: str = Field(
-        AfterValidator(validate_email),
-        title="The url to the desired product page",
-        index=True,
-    )
+    # Need to save as a string (for DB purposed), but still want URL validation
+    # Approach for this taken from here: https://github.com/pydantic/pydantic/discussions/6395
+    url: Annotated[
+        str,
+        BeforeValidator(lambda value: str(http_url_adapter.validate_python(value))),
+        Field(
+            ...,
+            index=True,
+            description="The url to the desired product page",
+        ),
+    ]
 
-    name: str = Field("The name of the product", index=True)
+    name: Annotated[
+        str,
+        Field(..., index=True),
+        "The name of the product",
+    ]
+
+    model_config = ConfigDict(
+        from_attributes=True,
+    )
 
 
 class Product(ProductBase, table=True):
@@ -25,13 +36,14 @@ class Product(ProductBase, table=True):
 
 
 class ProductCreate(ProductBase):
-    pass
+    url: HttpUrl
 
 
 class ProductPublic(ProductBase):
     id: uuid.UUID
+    url: HttpUrl
 
 
 class ProductUpdate(ProductBase):
-    url: Annotated[AnyUrl | None, Field(default=None), "The new url"]
+    url: Annotated[HttpUrl | None, Field(default=None), "The new url"]
     name: Annotated[str | None, Field(default=None), "The new name of the product"]
