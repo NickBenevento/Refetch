@@ -1,7 +1,7 @@
 import uuid
 from typing import Annotated
 
-from pydantic import AliasChoices, EmailStr
+from pydantic import AliasChoices, ConfigDict, EmailStr
 from sqlmodel import Field, SQLModel, String
 
 
@@ -9,13 +9,13 @@ class UserBase(SQLModel):
     # "index=True" creates a SQL index for the column - faster DB lookups
     first_name: Annotated[
         str,
-        Field(index=True),
+        Field(..., index=True),
         "First name",
         AliasChoices("first_name", "fname", "first"),
     ]
     last_name: Annotated[
         str,
-        Field(index=True),
+        Field(..., index=True),
         "Last name",
         AliasChoices("last_name", "lname", "last"),
     ]

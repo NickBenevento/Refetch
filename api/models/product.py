@@ -1,7 +1,7 @@
 import uuid
 from typing import Annotated
 
-from pydantic import BeforeValidator, ConfigDict, Field, HttpUrl, TypeAdapter
+from pydantic import BeforeValidator, ConfigDict, HttpUrl, TypeAdapter
 from sqlmodel import Field, SQLModel
 
 http_url_adapter = TypeAdapter(HttpUrl)
