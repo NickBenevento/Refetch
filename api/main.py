@@ -3,12 +3,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from .db.database import create_db_and_tables
-from .routers import product
+from .routers import product, user
 
 app = FastAPI()
 
 # Include all the routers
 app.include_router(product.router)
+app.include_router(user.router)
 
 
 @asynccontextmanager
