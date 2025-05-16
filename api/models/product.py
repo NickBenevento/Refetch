@@ -19,13 +19,11 @@ class ProductBase(SQLModel):
             description="The url to the desired product page",
         ),
     ]
-
     name: Annotated[
         str,
         Field(..., index=True),
         "The name of the product",
     ]
-
     model_config = ConfigDict(
         from_attributes=True,
     )
