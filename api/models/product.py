@@ -1,7 +1,7 @@
 import uuid
 from typing import Annotated
 
-from pydantic import BeforeValidator, ConfigDict, Field, HttpUrl, TypeAdapter
+from pydantic import BeforeValidator, ConfigDict, HttpUrl, TypeAdapter
 from sqlmodel import Field, SQLModel
 
 http_url_adapter = TypeAdapter(HttpUrl)
@@ -19,13 +19,11 @@ class ProductBase(SQLModel):
             description="The url to the desired product page",
         ),
     ]
-
     name: Annotated[
         str,
         Field(..., index=True),
         "The name of the product",
     ]
-
     model_config = ConfigDict(
         from_attributes=True,
     )

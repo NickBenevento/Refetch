@@ -1,7 +1,5 @@
 import uuid
 
-from api.models.product import Product
-
 
 def test_get_products(client):
     response = client.get("/product/")

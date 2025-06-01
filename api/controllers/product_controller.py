@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from api.db.database import SessionDep
-from api.models.product import Product, ProductBase, ProductPublic, ProductUpdate
+from api.models.product import Product, ProductPublic, ProductUpdate
 
 
 async def create_product(product: Product, session: SessionDep) -> ProductPublic:

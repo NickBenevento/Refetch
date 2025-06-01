@@ -1,32 +1,56 @@
 import uuid
 from typing import Annotated
 
-from pydantic import AfterValidator, AliasChoices
-from sqlmodel import Field, SQLModel
+from pydantic import AliasChoices, ConfigDict, EmailStr
+from sqlmodel import Field, SQLModel, String
 
 
-def validate_email(value: str):
-    # Check that email is valid
-    return value
-
-
-class User(SQLModel, table=True):
-    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
+class UserBase(SQLModel):
     # "index=True" creates a SQL index for the column - faster DB lookups
-    first_name: str = Field(index=True)
-    last_name: str = Field(index=True)
-    first_name: str = Annotated[
+    first_name: Annotated[
         str,
-        Field(index=True),
+        Field(..., index=True),
         "First name",
         AliasChoices("first_name", "fname", "first"),
     ]
-    last_name: str = Annotated[
+    last_name: Annotated[
         str,
-        Field(index=True),
+        Field(..., index=True),
         "Last name",
         AliasChoices("last_name", "lname", "last"),
     ]
-    email: str = Annotated[
-        str, AfterValidator(validate_email), Field(index=True), "Email"
+    email: Annotated[
+        EmailStr,
+        Field(index=True, sa_type=String),
+        "Email",
+    ]
+
+
+class User(UserBase, table=True):
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
+
+
+class UserCreate(UserBase):
+    pass
+
+
+class UserPublic(UserBase):
+    id: uuid.UUID
+
+
+class UserUpdate(UserBase):
+    first_name: Annotated[
+        str | None,
+        Field(default=None),
+        "Updated first name",
+    ]
+    last_name: Annotated[
+        str | None,
+        Field(default=None),
+        "Updated last name",
+    ]
+    email: Annotated[
+        EmailStr | None,
+        Field(default=None),
+        "Updated email",
     ]
