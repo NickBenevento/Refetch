@@ -45,5 +45,11 @@ def test_get_product_by_invalid_id(client):
     assert response.status_code == 404
 
 
-def test_update_product(session, client, example_product):
+def test_update_product_invalid_name(client):
+    product = {"url": "google", "name": ""}
+    response = client.post("/product/", json=product)
+    assert response.status_code == 422
+
+
+def test_update_product_by_id(session, client, example_product):
     pass
