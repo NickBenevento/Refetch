@@ -21,9 +21,14 @@ class ProductBase(SQLModel):
     ]
     name: Annotated[
         str,
-        Field(..., index=True),
+        Field(
+            ...,
+            min_length=1,
+            index=True,
+        ),
         "The name of the product",
     ]
+
     model_config = ConfigDict(
         from_attributes=True,
     )

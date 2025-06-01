@@ -21,12 +21,12 @@ def test_create_product_invalid_url(client):
 
 
 def test_create_product_invalid_name(client):
-    product = {"url": "google", "name": ""}
+    product = {"url": "https://google.com", "name": ""}
     response = client.post("/product/", json=product)
     assert response.status_code == 422
 
 
-def test_get_product_by_id(session, client, example_product):
+def test_get_product_by_id(client, example_product):
     result = client.post("/product/", json=example_product)
     product_id = result.json()["id"]
 
