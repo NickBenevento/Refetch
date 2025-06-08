@@ -3,13 +3,12 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import Header from './components/header'
 import './App.css'
-import './scss/main.scss'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
+    <div className="h-screen bg-emerald-100">
     <Header/>
       <div>
         <a href="https://vite.dev" target="_blank">
@@ -31,7 +30,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-    </>
+    </div>
   )
 }
 
