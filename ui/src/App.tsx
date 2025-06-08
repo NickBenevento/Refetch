@@ -6,11 +6,10 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-
   return (
-    <div className="h-screen bg-emerald-100">
-    <Header/>
-      <div>
+    <div className="w-screen min-h-screen bg-emerald-300 items-center justify-center flex flex-col">
+      <Header />
+      <div className="flex">
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
