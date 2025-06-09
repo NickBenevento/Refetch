@@ -7,7 +7,7 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
   return (
-    <div className="w-screen min-h-screen bg-emerald-300 items-center justify-center flex flex-col">
+    <div className="w-screen min-h-screen bg-cyan-700 items-center justify-center flex flex-col">
       <Header />
       <div className="flex">
         <a href="https://vite.dev" target="_blank">
