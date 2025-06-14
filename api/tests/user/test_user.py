@@ -23,7 +23,8 @@ def test_create_user_invalid_email(client, example_user):
 
 def test_create_user_invalid_first_name(client, example_user):
     example_user["first_name"] = ""
-    response = client.post("/user/", json=example_user)
+    user = {"first_name": "", "last_name": "Nye", "email": "thescienceguy@gmail.com"}
+    response = client.post("/user/", json=user)
     assert response.status_code == 422
 
 
