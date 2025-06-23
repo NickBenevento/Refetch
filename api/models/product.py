@@ -29,6 +29,26 @@ class ProductBase(SQLModel):
         "The name of the product",
     ]
 
+    # description: Annotated[
+    #     str,
+    #     Field(
+    #         None,
+    #         min_length=1,
+    #         index=True,
+    #     ),
+    #     "The name of the product",
+    # ]
+
+    # Need a one-many relationship between products and users
+    # creator_id: Annotated[
+    #     uuid.UUID,
+    #     Field(
+    #         ...,
+    #         index=True,
+    #         description="The user ID of the user that created this product",
+    #     ),
+    # ]
+
     model_config = ConfigDict(
         from_attributes=True,
     )
@@ -40,6 +60,7 @@ class Product(ProductBase, table=True):
 
 class ProductCreate(ProductBase):
     url: HttpUrl
+    name: str
 
 
 class ProductPublic(ProductBase):
