@@ -10,8 +10,7 @@ const ProductCard: React.FC<ListCardProps> = (props) => {
 
   return (
     <div>
-      Name: {data.name}
-      URL: {data.url}
+      Name: {data.name}, URL: {data.url}
     </div>
   );
 };

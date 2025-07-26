@@ -5,7 +5,7 @@ import ky, { HTTPError } from "ky";
 
 const getProducts = async (): Promise<Product[]> => {
   try {
-    return await ky.get("").json<Product[]>();
+    return await ky.get("http://127.0.0.1:8000/product/").json<Product[]>();
   } catch (error) {
     if (error instanceof HTTPError) {
       console.error("HTTP error:", error.response.status);
@@ -20,10 +20,12 @@ const ProductList = () => {
   const [products, setProducts] = useState<Product[] | null>(null);
 
   useEffect(() => {
-    async () => {
+    const fetchData = async () => {
       const data = await getProducts();
       setProducts(data);
     };
+
+    fetchData();
   }),
     [];
 
