@@ -15,7 +15,7 @@ class UserBase(SQLModel):
             index=True,
         ),
         "First name",
-        # AliasChoices("first_name", "fname", "first"),
+        AliasChoices("first_name", "fname", "first"),
     ]
     last_name: Annotated[
         str,
