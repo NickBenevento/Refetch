@@ -2,17 +2,19 @@ import type { Product } from "../../api/types/products";
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import ky, { HTTPError } from "ky";
+import { getExternalConfig } from "../../services/externalConfigService";
 
 const getProducts = async (): Promise<Product[]> => {
+  const config = getExternalConfig();
   try {
-    return await ky.get("http://127.0.0.1:8000/product/").json<Product[]>();
+    return await ky.get(`${config.apiService}/product/`).json<Product[]>();
   } catch (error) {
     if (error instanceof HTTPError) {
       console.error("HTTP error:", error.response.status);
     } else {
       console.error("Network or unexpected error:", error);
     }
-    return []; // Fallback to empty list
+    return [];
   }
 };
 
