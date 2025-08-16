@@ -1,5 +1,6 @@
 .PHONY: all clean test
 
+POSTGRES_CONTAINER_NAME=local-postgres
 DB_NAME=postgres
 
 all: test
@@ -18,14 +19,14 @@ down:
 restart:
 	docker compose down && docker compose up -d
 
+clean_db:
+	docker exec -it ${POSTGRES_CONTAINER_NAME} psql -U postgres -d ${DB_NAME} -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+
 run:
 	uvicorn api.main:app --reload
 
 logs:
 	docker compose logs -f
-
-clean:
-	rm -rf __pycache__ *.pyc
 
 test:
 	PYTHONPATH=. pytest api/tests

@@ -9,7 +9,7 @@ const ProductCard: React.FC<ListCardProps> = (props) => {
   const { data } = props;
 
   return (
-    <div>
+    <div id={data.id_}>
       Name: {data.name}, URL: {data.url}
     </div>
   );
