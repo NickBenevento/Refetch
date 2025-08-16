@@ -1,0 +1,18 @@
+services:
+    postgres:
+      image: postgres:17
+      container_name: local-postgres
+      restart: always
+      ports:
+        - "5432:5432"
+      environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      # Uncomment the volumes section below to persist data between container restarts/removals
+      # volumes:
+      #   - pgdata:/var/lib/postgresql/data
+
+# Uncomment this volume declaration if you want persistent storage
+# volumes:
+#   pgdata:
+#     driver: local

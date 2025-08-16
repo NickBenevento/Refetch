@@ -15,8 +15,8 @@ load_dotenv()
 
 DB_HOST = os.getenv("DB_HOST", "")
 DB_NAME = os.getenv("DB_NAME", "")
-USERNAME = os.getenv("DB_USERNAME", "")
-PASSWORD = os.getenv("DB_PASSWORD", "")
+USERNAME = os.getenv("POSTGRES_USER", "")
+PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
 PORT = os.getenv("DB_PORT", "")
 
 DATABASE_URL = URL.create(
@@ -36,7 +36,7 @@ ssl_context.load_verify_locations(pem_path)
 # Necessary b/c one single request could use multiple threads
 db_args = {
     "timeout": 5,
-    "ssl_context": ssl_context,
+    # "ssl_context": ssl_context,
 }
 
 engine = create_engine(DATABASE_URL, connect_args=db_args)
