@@ -8,11 +8,10 @@ services:
       environment:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      # Uncomment the volumes section below to persist data between container restarts/removals
-      # volumes:
-      #   - pgdata:/var/lib/postgresql/data
+      volumes:
+        - pgdata:/var/lib/postgresql/data
 
-# Uncomment this volume declaration if you want persistent storage
-# volumes:
-#   pgdata:
-#     driver: local
+# Persist data when container is stopped / restarted
+volumes:
+  pgdata:
+    driver: local
