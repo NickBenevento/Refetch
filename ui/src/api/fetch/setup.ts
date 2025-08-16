@@ -3,8 +3,9 @@ import ky from "ky";
 
 export const fetchExternalConfig = async () => {
   try {
+    console.log("path: ", import.meta.env.BASE_URL + "externalConfig.json");
     return await ky
-      .get(import.meta.env.BASE_URL + "/externalConfig.json")
+      .get(import.meta.env.BASE_URL + "externalConfig.json")
       .json<ExternalConfig>();
   } catch (error) {
     console.error(error);

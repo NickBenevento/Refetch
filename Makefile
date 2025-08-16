@@ -15,6 +15,9 @@ psql:	# log in to the postgres container
 down:
 	docker compose down
 
+restart:
+	docker compose down && docker compose up -d
+
 run:
 	uvicorn api.main:app --reload
 

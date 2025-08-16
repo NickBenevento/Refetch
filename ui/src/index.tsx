@@ -2,6 +2,10 @@
 import { setExternalConfig } from "./services/externalConfigService";
 import { fetchExternalConfig } from "./api/fetch/setup";
 import type { ExternalConfig } from "./api/types/externalConfig";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
 // import { RouterProvider } from "react-router/dom";
 // import { router } from "./router";
 
@@ -10,6 +14,14 @@ import type { ExternalConfig } from "./api/types/externalConfig";
 //     <RouterProvider router={router} />
 //   );
 // };
+
+const render = () => {
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+};
 
 const init = async () => {
   // Fetch the external config before app launches
@@ -22,7 +34,7 @@ const init = async () => {
     throw new Error("Cannot find external config");
   }
 
-  // render();
+  render();
 };
 
 void init();
