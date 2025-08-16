@@ -1,26 +1,11 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 from .db.database import create_db_and_tables
 from .routers import product, user
 
-app = FastAPI()
-
-# Include all the routers
-app.include_router(product.router)
-app.include_router(user.router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000"
-    ],  # The frontend URL: TODO make this configurable from externalConfig
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# from fastapi.middleware.cors import CORSMiddleware
 
 
 @asynccontextmanager
@@ -30,6 +15,20 @@ async def lifespan(app: FastAPI):
     create_db_and_tables()
     yield
     # Put shutdown logic / cleanup here
+
+
+app = FastAPI(lifespan=lifespan)
+
+# Include all the routers
+app.include_router(product.router)
+app.include_router(user.router)
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 
 # @app.exception_handler(SQLAlchemyError)

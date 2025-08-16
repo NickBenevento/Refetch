@@ -1,12 +1,25 @@
 .PHONY: all clean test
 
+DB_NAME=postgres
+
 all: test
+
+up:
+	docker compose up -d
+
+psql:	# log in to the postgres container
+	docker exec -it local-postgres psql -U ${DB_NAME}
+# exec --> run command inside container
+# i --> interactive (i.e. can type)
+
+down:
+	docker compose down
 
 run:
 	uvicorn api.main:app --reload
 
-connect_db:
-	psql -h 'refetch.cr04sckw0441.us-east-1.rds.amazonaws.com' -U postgres
+logs:
+	docker compose logs -f
 
 clean:
 	rm -rf __pycache__ *.pyc
