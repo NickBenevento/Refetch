@@ -35,7 +35,7 @@ class UserBase(SQLModel):
 
 
 class User(UserBase, table=True):
-    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
+    id_: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
 
 
 class UserCreate(UserBase):
@@ -43,7 +43,7 @@ class UserCreate(UserBase):
 
 
 class UserPublic(UserBase):
-    id: uuid.UUID
+    id_: uuid.UUID
 
 
 class UserUpdate(UserBase):
