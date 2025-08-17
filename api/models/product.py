@@ -55,7 +55,7 @@ class ProductBase(SQLModel):
 
 
 class Product(ProductBase, table=True):
-    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
+    id_: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
 
 
 class ProductCreate(ProductBase):
@@ -64,7 +64,7 @@ class ProductCreate(ProductBase):
 
 
 class ProductPublic(ProductBase):
-    id: uuid.UUID
+    id_: uuid.UUID
     url: HttpUrl
 
 

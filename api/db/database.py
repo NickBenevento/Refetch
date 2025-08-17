@@ -28,10 +28,11 @@ DATABASE_URL = URL.create(
     database=DB_NAME,
 )
 
-pem_path = os.path.abspath("api/certs/us-east-1-bundle.pem")
+# pem_path = os.path.abspath("api/certs/us-east-1-bundle.pem")
 ssl_context = ssl.create_default_context()
-ssl_context.check_hostname = False
-ssl_context.load_verify_locations(pem_path)
+# ssl_context.check_hostname = False
+# ssl_context.load_verify_locations(pem_path)
+
 # allow FastAPI to use the same database in different threads
 # Necessary b/c one single request could use multiple threads
 db_args = {
