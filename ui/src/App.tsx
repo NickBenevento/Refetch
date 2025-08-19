@@ -1,30 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import Header from "./components/header";
 import "./App.css";
 import ProductPage from "./components/product/ProductPage";
+import UserInfo from "./components/user/User";
+import { getUserIDFromSession } from "./services/userService";
 
 function App() {
   const [count, setCount] = useState(0);
+  const [userID, setUserID] = useState<string | null>(null);
+
+  // Initial useEffect to fetch userID from sessionStorage
+  useEffect(() => {
+    const id = getUserIDFromSession();
+    setUserID(id);
+  }, []);
+
   return (
     <div className="w-screen min-h-screen bg-cyan-700 items-center justify-center flex flex-col">
-      <Header />
-      <ProductPage />
-      <div className="flex">
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
+      <Header userID={userID} />
+      {userID ? (
+        <div>
+          <ProductPage />
+          <div className="flex">
+            <a href="https://vite.dev" target="_blank">
+              <img src={viteLogo} className="logo" alt="Vite logo" />
+            </a>
+            <a href="https://react.dev" target="_blank">
+              <img src={reactLogo} className="logo react" alt="React logo" />
+            </a>
+          </div>
+          <h1>Vite + React</h1>
+          <div className="card">
+            <button onClick={() => setCount((count) => count + 1)}>
+              count is {count}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <UserInfo userID={userID} setUserID={setUserID} />
+      )}
     </div>
   );
 }
