@@ -28,8 +28,7 @@ const ProductList = () => {
     };
 
     fetchData();
-  }),
-    [];
+  }, []);
 
   if (products === null) {
     return <div>Loading products...</div>;
