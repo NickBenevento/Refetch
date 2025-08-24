@@ -1,10 +1,12 @@
-import type { Product } from "../../api/types/products";
+import { useAtom } from "jotai";
+import { productAtom, type Product } from "../../api/types/products";
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { fetchProducts } from "../../api/fetch/product";
 
 const ProductList = () => {
-  const [products, setProducts] = useState<Product[] | null>(null);
+  const [products, setProducts] = useAtom(productAtom);
+  // const [products, setProducts] = useState<Product[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
