@@ -1,21 +1,12 @@
-import { useAtom } from "jotai";
-import { productAtom, type Product } from "../../api/types/products";
-import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import { fetchProducts } from "../../api/fetch/product";
+import type { Product } from "../../api/types/products";
 
-const ProductList = () => {
-  const [products, setProducts] = useAtom(productAtom);
-  // const [products, setProducts] = useState<Product[] | null>(null);
+interface ProductListProps {
+  products: Product[] | null;
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchProducts();
-      setProducts(data);
-    };
-
-    fetchData();
-  }, []);
+const ProductList: React.FC<ProductListProps> = (props) => {
+  const { products } = props;
 
   if (products === null) {
     return <div>Loading products...</div>;

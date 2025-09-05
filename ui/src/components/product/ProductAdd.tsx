@@ -2,8 +2,15 @@ import ky from "ky";
 import { useState } from "react";
 import { getExternalConfig } from "../../services/externalConfigService";
 import { fetchProducts } from "../../api/fetch/product";
+import type { Product } from "../../api/types/products";
 
-const AddProduct = () => {
+interface AddProductProps {
+  updateProducts(products: Product[]): void;
+}
+
+const AddProduct: React.FC<AddProductProps> = (props) => {
+  const { updateProducts } = props;
+
   const config = getExternalConfig();
   const [formData, setFormData] = useState({
     name: "",
@@ -21,7 +28,7 @@ const AddProduct = () => {
         console.log("Product added successfully");
         if (response.ok) {
           console.log("Product added successfully");
-          await fetchProducts();
+          updateProducts(await fetchProducts());
         }
       }
     } catch (error) {
