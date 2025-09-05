@@ -2,14 +2,12 @@ import ky from "ky";
 import { useState } from "react";
 import { getExternalConfig } from "../../services/externalConfigService";
 import { fetchProducts } from "../../api/fetch/product";
-import type { Product } from "../../api/types/products";
+import { useSetAtom } from "jotai";
+import { productAtom } from "../../api/types/products";
 
-interface AddProductProps {
-  updateProducts(products: Product[]): void;
-}
 
-const AddProduct: React.FC<AddProductProps> = (props) => {
-  const { updateProducts } = props;
+const AddProduct = () => {
+  const updateProducts = useSetAtom(productAtom);
 
   const config = getExternalConfig();
   const [formData, setFormData] = useState({
