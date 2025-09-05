@@ -5,7 +5,6 @@ import { fetchProducts } from "../../api/fetch/product";
 import { useSetAtom } from "jotai";
 import { productAtom } from "../../api/types/products";
 
-
 const AddProduct = () => {
   const updateProducts = useSetAtom(productAtom);
 
@@ -24,10 +23,8 @@ const AddProduct = () => {
       console.log("response: ", response);
       if (response.ok) {
         console.log("Product added successfully");
-        if (response.ok) {
-          console.log("Product added successfully");
-          updateProducts(await fetchProducts());
-        }
+        updateProducts(await fetchProducts());
+        setFormData({ name: "", url: "" }); // Clear form after success
       }
     } catch (error) {
       console.error("Error adding product:", error);

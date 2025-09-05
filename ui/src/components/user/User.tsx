@@ -40,10 +40,10 @@ const UserInfo: React.FC<userProps> = (props) => {
           <label>
             Input your name:
             <input
+              className="bg-gray-200 text-black"
               type="text"
               value={input}
               onChange={handleChange} // no need for arrow function here
-              className="p-2 rounded text-black"
             />
           </label>
           <button
