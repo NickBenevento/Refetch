@@ -1,35 +1,12 @@
-import type { Product } from "../../api/types/products";
-import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import ky, { HTTPError } from "ky";
-import { getExternalConfig } from "../../services/externalConfigService";
+import type { Product } from "../../api/types/products";
 
-const getProducts = async (): Promise<Product[]> => {
-  const config = getExternalConfig();
-  try {
-    return await ky.get(`${config.apiService}/product/`).json<Product[]>();
-  } catch (error) {
-    if (error instanceof HTTPError) {
-      console.error("HTTP error:", error.response.status);
-    } else {
-      console.error("Network or unexpected error:", error);
-    }
-    return [];
-  }
-};
+interface ProductListProps {
+  products: Product[] | null;
+}
 
-const ProductList = () => {
-  const [products, setProducts] = useState<Product[] | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getProducts();
-      setProducts(data);
-    };
-
-    fetchData();
-  }),
-    [];
+const ProductList: React.FC<ProductListProps> = (props) => {
+  const { products } = props;
 
   if (products === null) {
     return <div>Loading products...</div>;
